@@ -1,0 +1,268 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.library</groupId>
+    <artifactId>LibraryManagement</artifactId>
+    <version>1.0.0</version>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <spring.version>5.3.30</spring.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+    </dependencies>
+</project>
+
+
+package com.library.repository;
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class BookRepository {
+    public void addBook(String bookName) {
+        System.out.println("Book added: " + bookName);
+    }
+    public void getBook(String bookName) {
+        System.out.println("Fetching book: " + bookName);
+    }
+}
+
+
+package com.library.service;
+
+import com.library.repository.BookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class BookService {
+    private BookRepository bookRepository;
+
+    public BookService() {}
+
+    @Autowired
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
+    public void setBookRepository(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
+    public void addBook(String bookName) {
+        bookRepository.addBook(bookName);
+    }
+
+    public void getBook(String bookName) {
+        bookRepository.getBook(bookName);
+    }
+}
+
+
+package com.library.aspect;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
+
+@Aspect
+public class LoggingAspect {
+
+    @Before("execution(* com.library.service.*.*(..))")
+    public void beforeAdvice() {
+        System.out.println("LOG: Method execution started...");
+    }
+
+    @After("execution(* com.library.service.*.*(..))")
+    public void afterAdvice() {
+        System.out.println("LOG: Method execution finished.");
+    }
+
+    @Around("execution(* com.library.service.*.*(..))")
+    public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+        long start = System.currentTimeMillis();
+        Object result = joinPoint.proceed();
+        long elapsed = System.currentTimeMillis() - start;
+        System.out.println(joinPoint.getSignature() + " executed in " + elapsed + " ms");
+        return result;
+    }
+}
+
+
+package com.library.aspect;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
+
+@Aspect
+public class LoggingAspect {
+
+    @Before("execution(* com.library.service.*.*(..))")
+    public void beforeAdvice() {
+        System.out.println("LOG: Method execution started...");
+    }
+
+    @After("execution(* com.library.service.*.*(..))")
+    public void afterAdvice() {
+        System.out.println("LOG: Method execution finished.");
+    }
+
+    @Around("execution(* com.library.service.*.*(..))")
+    public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+        long start = System.currentTimeMillis();
+        Object result = joinPoint.proceed();
+        long elapsed = System.currentTimeMillis() - start;
+        System.out.println(joinPoint.getSignature() + " executed in " + elapsed + " ms");
+        return result;
+    }
+}
+
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <context:component-scan base-package="com.library"/>
+    <aop:aspectj-autoproxy/>
+
+    <bean id="bookRepository" class="com.library.repository.BookRepository"/>
+
+    <bean id="bookServiceSetter" class="com.library.service.BookService">
+        <property name="bookRepository" ref="bookRepository"/>
+    </bean>
+
+    <bean id="bookServiceConstructor" class="com.library.service.BookService">
+        <constructor-arg ref="bookRepository"/>
+    </bean>
+
+    <bean id="loggingAspect" class="com.library.aspect.LoggingAspect"/>
+</beans>
+
+
+package com.library;
+
+import com.library.service.BookService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class App {
+    public static void main(String[] args) {
+        ApplicationContext context =
+                new ClassPathXmlApplicationContext("applicationContext.xml");
+
+        BookService bookService = (BookService) context.getBean("bookServiceSetter");
+        bookService.addBook("The Alchemist");
+        bookService.getBook("The Alchemist");
+    }
+}
+
+
+spring.datasource.url=jdbc:h2:mem:librarydb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.hibernate.ddl-auto=update
+
+
+package com.library;
+
+import javax.persistence.*;
+
+@Entity
+public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String title;
+    private String author;
+
+    public Book() {}
+    public Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+    }
+    public Long getId() { return id; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getAuthor() { return author; }
+    public void setAuthor(String author) { this.author = author; }
+}
+
+package com.library;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BookJpaRepository extends JpaRepository<Book, Long> {}
+
+
+package com.library;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/books")
+public class BookController {
+
+    @Autowired
+    private BookJpaRepository bookRepository;
+
+    @GetMapping
+    public List<Book> getAllBooks() { return bookRepository.findAll(); }
+
+    @PostMapping
+    public Book addBook(@RequestBody Book book) { return bookRepository.save(book); }
+
+    @GetMapping("/{id}")
+    public Book getBook(@PathVariable Long id) { return bookRepository.findById(id).orElse(null); }
+
+    @DeleteMapping("/{id}")
+    public String deleteBook(@PathVariable Long id) {
+        bookRepository.deleteById(id);
+        return "Deleted id: " + id;
+    }
+}
+
+
+package com.library;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class LibraryManagementApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(LibraryManagementApplication.class, args);
+    }
+}
