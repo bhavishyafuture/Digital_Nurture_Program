@@ -1,0 +1,36 @@
+.box {
+  width: 300px;
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 20px;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+dt {
+  font-weight: 500;
+}
+
+CohortDetails.js
+
+jsx
+import React from 'react';
+import styles from './CohortDetails.module.css';
+
+function CohortDetails(props) {
+  const titleColor = props.status === "ongoing" ? "green" : "blue";
+
+  return (
+    <div className={styles.box}>
+      <h3 style={{ color: titleColor }}>{props.cohortName}</h3>
+      <dl>
+        <dt>Status:</dt>
+        <dd>{props.status}</dd>
+        <dt>Start Date:</dt>
+        <dd>{props.startDate}</dd>
+      </dl>
+    </div>
+  );
+}
+
+export default CohortDetails;
