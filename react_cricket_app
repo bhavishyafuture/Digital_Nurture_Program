@@ -1,0 +1,84 @@
+import React from 'react';
+
+function ListofPlayers() {
+  const players = [
+    { name: "Player1", score: 45 },
+    { name: "Player2", score: 78 },
+    { name: "Player3", score: 65 },
+    { name: "Player4", score: 90 },
+    { name: "Player5", score: 30 },
+    { name: "Player6", score: 88 },
+    { name: "Player7", score: 55 },
+    { name: "Player8", score: 72 },
+    { name: "Player9", score: 40 },
+    { name: "Player10", score: 60 },
+    { name: "Player11", score: 95 }
+  ];
+
+  const playerNames = players.map(p => `${p.name}: ${p.score}`);
+  const lowScorePlayers = players.filter(p => p.score < 70);
+
+  return (
+    <div>
+      <h2>All Players</h2>
+      {playerNames.map((p, index) => <p key={index}>{p}</p>)}
+
+      <h2>Players with score below 70</h2>
+      {lowScorePlayers.map((p, index) => <p key={index}>{p.name}: {p.score}</p>)}
+    </div>
+  );
+}
+
+export default ListofPlayers;
+
+src/Components/IndianPlayers.js
+
+jsx
+import React from 'react';
+
+function IndianPlayers() {
+  const oddTeam = { player1: "Rohit", player3: "Kohli", player5: "Rahul" };
+  const evenTeam = { player2: "Dhawan", player4: "Pant", player6: "Jadeja" };
+
+  const { player1, player3, player5 } = oddTeam;
+  const { player2, player4, player6 } = evenTeam;
+
+  const T20players = ["Rohit", "Kohli", "Pant"];
+  const RanjiTrophyPlayers = ["Mayank", "Pujara", "Iyer"];
+
+  const mergedPlayers = [...T20players, ...RanjiTrophyPlayers];
+
+  return (
+    <div>
+      <h2>Odd Team Players</h2>
+      <p>{player1}, {player3}, {player5}</p>
+
+      <h2>Even Team Players</h2>
+      <p>{player2}, {player4}, {player6}</p>
+
+      <h2>Merged Players (T20 + Ranji Trophy)</h2>
+      {mergedPlayers.map((p, index) => <p key={index}>{p}</p>)}
+    </div>
+  );
+}
+
+export default IndianPlayers;
+
+App.js
+
+jsx
+import React from 'react';
+import ListofPlayers from './Components/ListofPlayers';
+import IndianPlayers from './Components/IndianPlayers';
+
+function App() {
+  const flag = true;
+
+  return (
+    <div>
+      {flag ? <ListofPlayers /> : <IndianPlayers />}
+    </div>
+  );
+}
+
+export default App;
