@@ -1,0 +1,56 @@
+import React from 'react';
+
+function Guest() {
+  return (
+    <div>
+      <h2>Flight Details</h2>
+      <p>Flight AI101: Delhi to Mumbai - 10:00 AM</p>
+      <p>Flight AI202: Bangalore to Chennai - 2:00 PM</p>
+      <p>Please login to book tickets.</p>
+    </div>
+  );
+}
+
+export default Guest;
+
+src/Components/User.js
+
+jsx
+import React from 'react';
+
+function User() {
+  return (
+    <div>
+      <h2>Welcome User!</h2>
+      <p>Flight AI101: Delhi to Mumbai - 10:00 AM</p>
+      <button>Book Ticket</button>
+    </div>
+  );
+}
+
+export default User;
+
+App.js
+
+jsx
+import React, { useState } from 'react';
+import Guest from './Components/Guest';
+import User from './Components/User';
+
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  return (
+    <div>
+      {isLoggedIn ? <User /> : <Guest />}
+
+      {isLoggedIn ? (
+        <button onClick={() => setIsLoggedIn(false)}>Logout</button>
+      ) : (
+        <button onClick={() => setIsLoggedIn(true)}>Login</button>
+      )}
+    </div>
+  );
+}
+
+export default App;
