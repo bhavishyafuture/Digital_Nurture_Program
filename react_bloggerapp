@@ -1,0 +1,75 @@
+import React from 'react';
+
+function BookDetails(props) {
+  // Way 1: if-else
+  if (props.show) {
+    return <h2>Book Details: Atomic Habits</h2>;
+  }
+  return null;
+}
+
+export default BookDetails;
+
+src/Components/BlogDetails.js
+
+jsx
+import React from 'react';
+
+function BlogDetails(props) {
+  // Way 2: Ternary Operator
+  return (
+    <div>
+      {props.show ? <h2>Blog Details: React Hooks Guide</h2> : null}
+    </div>
+  );
+}
+
+export default BlogDetails;
+
+src/Components/CourseDetails.js
+
+jsx
+import React from 'react';
+
+function CourseDetails(props) {
+  // Way 3: Logical && Operator
+  return (
+    <div>
+      {props.show && <h2>Course Details: Full Stack React Course</h2>}
+    </div>
+  );
+}
+
+export default CourseDetails;
+
+App.js
+
+jsx
+import React from 'react';
+import BookDetails from './Components/BookDetails';
+import BlogDetails from './Components/BlogDetails';
+import CourseDetails from './Components/CourseDetails';
+
+function App() {
+  const showBook = true;
+  const showBlog = true;
+  const showCourse = false;
+
+  // Way 4: Element variable
+  let courseElement;
+  if (showCourse) {
+    courseElement = <CourseDetails show={showCourse} />;
+  } else {
+    courseElement = <p>Course details hidden</p>;
+  }
+
+  return (
+    <div>
+      <BookDetails show={showBook} />
+      <BlogDetails show={showBlog} />
+      {courseElement}
+    </div>
+  );
+}
+
+export default App;
