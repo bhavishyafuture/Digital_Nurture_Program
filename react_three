@@ -1,0 +1,48 @@
+.scoreBox {
+  width: 300px;
+  margin: 20px auto;
+  padding: 15px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+src/Components/CalculateScore.js
+
+jsx
+import React from 'react';
+import '../Stylesheets/mystyle.css';
+
+function CalculateScore(props) {
+  const average = props.total / props.goal;
+
+  return (
+    <div className="scoreBox">
+      <h2>Student Score Card</h2>
+      <p>Name: {props.name}</p>
+      <p>School: {props.school}</p>
+      <p>Total: {props.total}</p>
+      <p>Goal: {props.goal}</p>
+      <p>Average Score: {average.toFixed(2)}</p>
+    </div>
+  );
+}
+
+export default CalculateScore;
+
+App.js
+
+jsx
+import React from 'react';
+import CalculateScore from './Components/CalculateScore';
+
+function App() {
+  return (
+    <div>
+      <CalculateScore name="Rahul" school="DAV Public School" total={450} goal={5} />
+    </div>
+  );
+}
+
+export default App;
