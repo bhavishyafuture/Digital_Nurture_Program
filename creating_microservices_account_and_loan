@@ -1,0 +1,141 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.18</version>
+    </parent>
+    <groupId>com.cognizant</groupId>
+    <artifactId>account</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
+application.properties
+
+properties
+server.port=8080
+spring.application.name=account-service
+
+AccountApplication.java
+
+java
+package com.cognizant.account;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class AccountApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(AccountApplication.class, args);
+    }
+}
+
+AccountController.java
+
+java
+package com.cognizant.account.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class AccountController {
+
+    @GetMapping("/accounts/{number}")
+    public Map<String, Object> getAccount(@PathVariable String number) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("number", number);
+        response.put("type", "savings");
+        response.put("balance", 234343);
+        return response;
+    }
+}
+
+Test: http://localhost:8080/accounts/00987987973432
+
+Loan Microservice
+
+pom.xml — same as account, just change:
+
+xml
+<artifactId>loan</artifactId>
+
+application.properties
+
+properties
+server.port=8081
+spring.application.name=loan-service
+
+LoanApplication.java
+
+java
+package com.cognizant.loan;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class LoanApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(LoanApplication.class, args);
+    }
+}
+
+LoanController.java
+
+java
+package com.cognizant.loan.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class LoanController {
+
+    @GetMapping("/loans/{number}")
+    public Map<String, Object> getLoan(@PathVariable String number) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("number", number);
+        response.put("type", "car");
+        response.put("loan", 400000);
+        response.put("emi", 3258);
+        response.put("tenure", 18);
+        return response;
+    }
+}
+
+Test: http://localhost:8081/loans/H00987987972342
