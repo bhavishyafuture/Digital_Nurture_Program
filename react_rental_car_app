@@ -1,0 +1,43 @@
+import React from 'react';
+
+function App() {
+  const heading = <h1>Office Space Rental</h1>;
+
+  const office = {
+    name: "Tech Park Suite",
+    rent: 55000,
+    address: "MG Road, Bangalore"
+  };
+
+  const officeList = [
+    { name: "Tech Park Suite", rent: 55000, address: "MG Road, Bangalore" },
+    { name: "Business Hub", rent: 75000, address: "Baner, Pune" },
+    { name: "Startup Nest", rent: 45000, address: "Whitefield, Bangalore" }
+  ];
+
+  return (
+    <div>
+      {heading}
+      <img src="/office.jpg" alt="Office Space" width="300" />
+
+      <h2>{office.name}</h2>
+      <p style={{ color: office.rent < 60000 ? "red" : "green" }}>
+        Rent: {office.rent}
+      </p>
+      <p>Address: {office.address}</p>
+
+      <h2>All Offices</h2>
+      {officeList.map((item, index) => (
+        <div key={index}>
+          <h3>{item.name}</h3>
+          <p style={{ color: item.rent < 60000 ? "red" : "green" }}>
+            Rent: {item.rent}
+          </p>
+          <p>Address: {item.address}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default App;
