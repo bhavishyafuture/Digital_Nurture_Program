@@ -1,0 +1,55 @@
+import React from 'react';
+
+class Home extends React.Component {
+  render() {
+    return <h2>Welcome to the Home page of Student Management Portal</h2>;
+  }
+}
+
+export default Home;
+
+src/Components/About.js
+
+jsx
+import React from 'react';
+
+class About extends React.Component {
+  render() {
+    return <h2>Welcome to the About page of the Student Management Portal</h2>;
+  }
+}
+
+export default About;
+
+src/Components/Contact.js
+
+jsx
+import React from 'react';
+
+class Contact extends React.Component {
+  render() {
+    return <h2>Welcome to the Contact page of the Student Management Portal</h2>;
+  }
+}
+
+export default Contact;
+
+App.js
+
+jsx
+import React from 'react';
+import Home from './Components/Home';
+import About from './Components/About';
+import Contact from './Components/Contact';
+
+function App() {
+  return (
+    <div>
+      <Home />
+      <About />
+      <Contact />
+    </div>
+  );
+}
+
+export default App;
